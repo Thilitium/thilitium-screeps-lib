@@ -5,7 +5,7 @@
     ],
     "module": "CommonJS",
     "outDir": "dist", // .js (as well as .d.ts, .js.map, etc.) files will be emitted into this directory.,
-    "removeComments": true,
+    "removeComments": false,
     "target": "ES6",
 
     // Module resolution
@@ -32,6 +32,7 @@
   },
   "include": ["./**/*.ts"],
   "exclude": [
-    "node_modules/**/*"
+    "node_modules/**/*",
+    "dist/**/*"
   ]
 }
