@@ -32,7 +32,7 @@ class Transporter {
         if (creep.memory.transporting)
             creep.memory.transporting = Behavior.Store.run(creep);
         if (!creep.memory.transporting)
-            creep.memory.transporting = Behavior.Gather.run(creep);
+            creep.memory.transporting = !Behavior.Gather.run(creep);
     }
 }
 exports.Transporter = Transporter;
