@@ -1,5 +1,4 @@
-import { Gather, Harvest, Store } from "../Behaviors/behaviors";
-import { Upgrade } from "../Behaviors/Creeps/Upgrade";
+import * as Behavior from '../Behaviors/Creeps';
 
 /**
  * Creep meant to upgrade the main controller of its own room by any means.
@@ -7,9 +6,10 @@ import { Upgrade } from "../Behaviors/Creeps/Upgrade";
  */
 export class Upgrader {
     /** Upgrade / Gather / Harvest / Store */
-    run(creep: Creep) {
-        if (creep.memory.upgrading) creep.memory.upgrading = Upgrade.run(creep);
-        if (!creep.memory.upgrading) creep.memory.upgrading = !(Gather.run(creep) || Harvest.run(creep) || Store.run(creep));
+    static run(creep: Creep) {
+        if (creep.memory.upgrading) creep.memory.upgrading = Behavior.Upgrade.run(creep);
+        if (!creep.memory.upgrading) creep.memory.upgrading = 
+            !(Behavior.Gather.run(creep) || Behavior.Harvest.run(creep) || Behavior.Store.run(creep));
     }
 }
 

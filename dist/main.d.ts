@@ -1,3 +1,3 @@
-export * as Behaviors from './behaviors/behaviors';
-export * from './types/Memory';
-export * from './types/CreepMemory';
+export * as Behaviors from './Behaviors';
+export * as Creeps from './Creeps';
+export * as Types from './Types/';

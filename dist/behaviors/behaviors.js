@@ -14,5 +14,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./creeps/Gather"), exports);
+__exportStar(require("./Creeps/Gather"), exports);
+__exportStar(require("./Creeps/Build"), exports);
+__exportStar(require("./Creeps/Deposit"), exports);
+__exportStar(require("./Creeps/Harvest"), exports);
+__exportStar(require("./Creeps/Repair"), exports);
+__exportStar(require("./Creeps/Store"), exports);
 //# sourceMappingURL=behaviors.js.map

@@ -1,4 +1,4 @@
-import {Gather, Repair, Store} from '../Behaviors/Behaviors';
+import * as Behavior from '../Behaviors/Creeps';
 
 /** 
  * Creep that is going to fill up then repair stuff.
@@ -6,9 +6,12 @@ import {Gather, Repair, Store} from '../Behaviors/Behaviors';
  */
 export class Reparator {
     /** Repair / Gather / Store */
-    run(creep: Creep) {
-        if (creep.memory.repairing) creep.memory.repairing = Repair.run(creep);
-        if (!creep.memory.repairing) creep.memory.repairing = !(Gather.run(creep) || Store.run(creep));
+    static run(creep: Creep) {
+        if (creep.memory.repairing)
+            creep.memory.repairing = Behavior.Repair.run(creep);
+
+        if (!creep.memory.repairing)
+            creep.memory.repairing = !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
     }
 }
 

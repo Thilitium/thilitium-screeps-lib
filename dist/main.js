@@ -22,12 +22,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Behaviors = void 0;
-exports.Behaviors = __importStar(require("./behaviors/behaviors"));
-__exportStar(require("./types/Memory"), exports);
-__exportStar(require("./types/CreepMemory"), exports);
+exports.Types = exports.Creeps = exports.Behaviors = void 0;
+exports.Behaviors = __importStar(require("./Behaviors"));
+exports.Creeps = __importStar(require("./Creeps"));
+exports.Types = __importStar(require("./Types/"));
 //# sourceMappingURL=main.js.map

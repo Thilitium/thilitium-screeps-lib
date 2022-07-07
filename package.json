@@ -1,6 +1,6 @@
 {
   "name": "thilitium-screeps-lib",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -23,7 +23,9 @@
   "author": "thilitium",
   "license": "ISC",
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.1",
-    "@types/screeps": "^3.3.0"
+    "@types/screeps": "^3.3.0",
+    "lodash": "^4.17.21"
   }
 }
