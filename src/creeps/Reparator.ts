@@ -7,11 +7,8 @@ import * as Behavior from '../Behaviors/Creeps';
 export class Reparator {
     /** Repair / Gather / Store */
     static run(creep: Creep) {
-        if (creep.memory.repairing)
-            creep.memory.repairing = Behavior.Repair.run(creep);
-
-        if (!creep.memory.repairing)
-            creep.memory.repairing = !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
+        creep.memory.repairing = Behavior.Repair.run(creep) || 
+            !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
     }
 }
 

@@ -32,11 +32,8 @@ const Behavior = __importStar(require("../Behaviors/Creeps"));
 class Upgrader {
     /** Upgrade / Gather / Harvest / Store */
     static run(creep) {
-        if (creep.memory.upgrading)
-            creep.memory.upgrading = Behavior.Upgrade.run(creep);
-        if (!creep.memory.upgrading)
-            creep.memory.upgrading =
-                !(Behavior.Gather.run(creep) || Behavior.Harvest.run(creep) || Behavior.Store.run(creep));
+        creep.memory.upgrading = Behavior.Upgrade.run(creep) ||
+            !(Behavior.Gather.run(creep) || Behavior.Harvest.run(creep) || Behavior.Store.run(creep));
     }
 }
 exports.Upgrader = Upgrader;

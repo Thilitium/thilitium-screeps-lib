@@ -29,10 +29,9 @@ const Behavior = __importStar(require("../Behaviors/Creeps"));
 class Transporter {
     /** Store / Gather */
     static run(creep) {
-        if (creep.memory.transporting)
-            creep.memory.transporting = Behavior.Store.run(creep);
-        if (!creep.memory.transporting)
-            creep.memory.transporting = !Behavior.Gather.run(creep);
+        creep.memory.transporting = Behavior.Store.run(creep) ||
+            !(Behavior.Gather.run(creep) || Behavior.Repair.run(creep) || Behavior.Build.run(creep));
+        ;
     }
 }
 exports.Transporter = Transporter;

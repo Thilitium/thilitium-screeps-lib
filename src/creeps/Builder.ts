@@ -3,8 +3,7 @@ import * as Behaviors from '../Behaviors/Creeps';
 export class Builder {
     /** build, gather, harvest, store */
     static run(creep: Creep) {
-        if (creep.memory.building) creep.memory.building = Behaviors.Build.run(creep);
-        if (!creep.memory.building) creep.memory.building = Behaviors.Build.run(creep) 
+        creep.memory.building = Behaviors.Build.run(creep) 
             || !(Behaviors.Gather.run(creep) || Behaviors.Harvest.run(creep) || Behaviors.Store.run(creep));
     }
 };

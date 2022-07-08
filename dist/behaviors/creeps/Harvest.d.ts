@@ -8,4 +8,5 @@ export declare class Harvest {
      * @returns true if the creep is moving there or harvesting, false otherwise.
      */
     static run(creep: Creep): boolean;
+    private static getFreeActiveSourceInRoom;
 }

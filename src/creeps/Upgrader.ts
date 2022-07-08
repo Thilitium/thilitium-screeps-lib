@@ -7,8 +7,7 @@ import * as Behavior from '../Behaviors/Creeps';
 export class Upgrader {
     /** Upgrade / Gather / Harvest / Store */
     static run(creep: Creep) {
-        if (creep.memory.upgrading) creep.memory.upgrading = Behavior.Upgrade.run(creep);
-        if (!creep.memory.upgrading) creep.memory.upgrading = 
+        creep.memory.upgrading = Behavior.Upgrade.run(creep) ||
             !(Behavior.Gather.run(creep) || Behavior.Harvest.run(creep) || Behavior.Store.run(creep));
     }
 }

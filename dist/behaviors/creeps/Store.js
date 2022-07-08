@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Store = void 0;
 class Store {
     static run(creep) {
+        if (creep.store[RESOURCE_ENERGY] === 0)
+            return false;
         //TODO: Refactor this shit
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) => {

@@ -4,8 +4,8 @@ import * as Behavior from '../Behaviors/Creeps';
 export class Transporter {
     /** Store / Gather */
     static run(creep: Creep) {
-        if (creep.memory.transporting) creep.memory.transporting = Behavior.Store.run(creep);
-        if (!creep.memory.transporting) creep.memory.transporting = Behavior.Gather.run(creep);
+        creep.memory.transporting = Behavior.Store.run(creep) ||
+            !(Behavior.Gather.run(creep) || Behavior.Repair.run(creep) || Behavior.Build.run(creep));;
     }
 }
 

@@ -32,10 +32,8 @@ const Behavior = __importStar(require("../Behaviors/Creeps"));
 class Reparator {
     /** Repair / Gather / Store */
     static run(creep) {
-        if (creep.memory.repairing)
-            creep.memory.repairing = Behavior.Repair.run(creep);
-        if (!creep.memory.repairing)
-            creep.memory.repairing = !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
+        creep.memory.repairing = Behavior.Repair.run(creep) ||
+            !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
     }
 }
 exports.Reparator = Reparator;

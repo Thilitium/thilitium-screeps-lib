@@ -29,11 +29,8 @@ const Behaviors = __importStar(require("../Behaviors/Creeps"));
 class Builder {
     /** build, gather, harvest, store */
     static run(creep) {
-        if (creep.memory.building)
-            creep.memory.building = Behaviors.Build.run(creep);
-        if (!creep.memory.building)
-            creep.memory.building = Behaviors.Build.run(creep)
-                || !(Behaviors.Gather.run(creep) || Behaviors.Harvest.run(creep) || Behaviors.Store.run(creep));
+        creep.memory.building = Behaviors.Build.run(creep)
+            || !(Behaviors.Gather.run(creep) || Behaviors.Harvest.run(creep) || Behaviors.Store.run(creep));
     }
 }
 exports.Builder = Builder;

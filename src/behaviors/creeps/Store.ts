@@ -1,5 +1,6 @@
 export class Store {
     static run(creep: Creep): boolean {
+        if (creep.store[RESOURCE_ENERGY] === 0) return false;
         //TODO: Refactor this shit
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) => {

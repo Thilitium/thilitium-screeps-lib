@@ -34,7 +34,7 @@ export class Repair {
 
         if (!damagedStructure) {
             // roads
-            let damagedStructure = creep.room.find(FIND_STRUCTURES, {
+            damagedStructure = creep.room.find(FIND_STRUCTURES, {
                 filter: structure =>
                     structure.structureType === STRUCTURE_ROAD
                     && structure.hits + .1 * structure.hitsMax < structure.hitsMax
@@ -63,6 +63,7 @@ export class Repair {
         }
 
         if (damagedStructure) {
+            creep.memory.repairingStructureId = damagedStructure.id;
             switch (creep.repair(damagedStructure)) {
                 case ERR_NOT_IN_RANGE:
                     creep.moveTo(damagedStructure, { visualizePathStyle: { stroke: '#3347ff' } });
