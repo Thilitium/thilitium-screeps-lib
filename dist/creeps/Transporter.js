@@ -31,7 +31,6 @@ class Transporter {
     static run(creep) {
         creep.memory.transporting = Behavior.Store.run(creep) ||
             !(Behavior.Gather.run(creep) || Behavior.Repair.run(creep) || Behavior.Build.run(creep));
-        ;
     }
 }
 exports.Transporter = Transporter;

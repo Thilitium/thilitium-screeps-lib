@@ -5,10 +5,10 @@ import * as Behavior from '../Behaviors/Creeps';
  * When controller is fully upgraded, it becomes a transporter.
  */
 export class Upgrader {
-    /** Upgrade / Gather / Harvest / Store */
+    /** Upgrade / Gather / Store */
     static run(creep: Creep) {
         creep.memory.upgrading = Behavior.Upgrade.run(creep) ||
-            !(Behavior.Gather.run(creep) || Behavior.Harvest.run(creep) || Behavior.Store.run(creep));
+            !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
     }
 }
 

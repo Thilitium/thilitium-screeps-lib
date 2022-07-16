@@ -29,11 +29,8 @@ const Behavior = __importStar(require("../Behaviors/Creeps"));
  * Creep that is going to mine and deposit into any available storage structure.
  */
 class Miner {
-    static run(creep) {
-        if (creep.memory.mining)
-            creep.memory.mining = Behavior.Harvest.run(creep);
-        if (!creep.memory.mining)
-            creep.memory.mining = !Behavior.Deposit.run(creep);
+    static run(creep, stationary = false) {
+        creep.memory.mining = Behavior.Harvest.run(creep, stationary) || !Behavior.Deposit.run(creep, stationary);
     }
 }
 exports.Miner = Miner;

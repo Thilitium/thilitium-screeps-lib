@@ -30,10 +30,10 @@ const Behavior = __importStar(require("../Behaviors/Creeps"));
  * When controller is fully upgraded, it becomes a transporter.
  */
 class Upgrader {
-    /** Upgrade / Gather / Harvest / Store */
+    /** Upgrade / Gather / Store */
     static run(creep) {
         creep.memory.upgrading = Behavior.Upgrade.run(creep) ||
-            !(Behavior.Gather.run(creep) || Behavior.Harvest.run(creep) || Behavior.Store.run(creep));
+            !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
     }
 }
 exports.Upgrader = Upgrader;

@@ -6,8 +6,8 @@ export class Harvest {
      * The creep will harvest energy from active sources.
      * @returns true if the creep is moving there or harvesting, false otherwise.
      */
-    static run(creep: Creep) {
-        if (creep.store.getFreeCapacity() <= 0) {
+    static run(creep: Creep, stationary: boolean) {
+        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
             delete creep.memory.harvestingSourceId;
             return false;
         }
@@ -15,50 +15,40 @@ export class Harvest {
         let harvestingSource: Source | null = creep.memory.harvestingSourceId ?
             Game.getObjectById<Source>(creep.memory.harvestingSourceId) : null;
 
-        if (!harvestingSource && creep.store.getFreeCapacity() > 0) {
-            harvestingSource = this.getFreeActiveSourceInRoom(creep);
+        if (!harvestingSource) {
+            harvestingSource = this.getFreeSourceInRoom(creep, false);
         }
 
         if (harvestingSource) {
+            creep.memory.harvestingSourceId = harvestingSource.id;
             const result = creep.harvest(harvestingSource);
+
+            if (!stationary && result === ERR_NOT_ENOUGH_RESOURCES) {
+                delete creep.memory.harvestingSourceId;
+                return false;
+            }
+
             switch (result) {
-                case ERR_NOT_IN_RANGE:
+                case ERR_NOT_IN_RANGE :
+                case ERR_NOT_ENOUGH_RESOURCES:
                     creep.moveTo(harvestingSource, { visualizePathStyle: { stroke: '#ffffff' } });
+                case ERR_BUSY:
+                    // Like when the creep is being spawned.
                 case 0:
-                    creep.memory.harvestingSourceId = harvestingSource.id;
                     return true;
+                default:
+                    console.error('couldnt harvest source ' + result);
             }
         }
 
         delete creep.memory.harvestingSourceId;
         return false;
     }
-
-    /*private static getFreeActiveSource(creep: Creep): Source | null {
+    
+    private static getFreeSourceInRoom(creep: Creep, active: boolean): Source | null {
         const room = creep.room;
-        const sources = room.find(FIND_SOURCES_ACTIVE);
-
-        const paths = sources.filter(source => {
-            const result = PathFinder.search(
-                creep.pos, 
-                source.pos, 
-                {
-                    maxRooms: 1
-                }
-            );
-
-            if (result.incomplete) return false;
-
-            return true;
-        });
-
-        if (!paths.length) return null;
+        const sources = room.find(active ? FIND_SOURCES_ACTIVE : FIND_SOURCES);
         
-        return paths[0];
-    }*/
-    private static getFreeActiveSourceInRoom(creep: Creep): Source | null {
-        const room = creep.room;
-        const sources = room.find(FIND_SOURCES_ACTIVE);
         const freeSources  = sources.filter(source => {
             const numberOfCreepsHarvestingSource = room.find(FIND_CREEPS).filter(creep => creep.memory.harvestingSourceId === source.id).length;
             const spots = source.room.lookForAtArea(
@@ -66,12 +56,14 @@ export class Harvest {
                 source.pos.y - 1, source.pos.x - 1, 
                 source.pos.y + 1, source.pos.x + 1, true);
             const freeSpots = spots.filter(spot => spot.terrain !== "wall").length;
-            
+           
             return freeSpots > numberOfCreepsHarvestingSource;
         });
 
-        if(!freeSources.length) return null;
-
-        return creep.pos.findClosestByRange(freeSources);
+        if (!freeSources.length) return null;
+        const thatSource = creep.pos.findClosestByRange(freeSources);
+        
+        
+        return thatSource;
     }
 }

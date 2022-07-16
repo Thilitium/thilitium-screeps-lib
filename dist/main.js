@@ -23,8 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Types = exports.Creeps = exports.Behaviors = void 0;
+exports.Structures = exports.Types = exports.Creeps = exports.Behaviors = void 0;
 exports.Behaviors = __importStar(require("./Behaviors"));
 exports.Creeps = __importStar(require("./Creeps"));
 exports.Types = __importStar(require("./Types/"));
+exports.Structures = __importStar(require("./Structures"));
 //# sourceMappingURL=main.js.map

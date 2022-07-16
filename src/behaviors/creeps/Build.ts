@@ -21,18 +21,18 @@ export class Build {
 
         if (buildingStructure) {
             const result = creep.build(buildingStructure);
+            creep.memory.buildingStructureId = buildingStructure.id;
             switch (result) {
                 case ERR_NOT_IN_RANGE:
-                    creep.memory.buildingStructureId = buildingStructure.id;
                     creep.moveTo(buildingStructure, { visualizePathStyle: { stroke: '#ffffff' } });
                 case 0:
                     return true;
                 default:
-                    delete creep.memory.buildingStructureId;
-                    return false;
+                    // could not repair
             }
         }
 
+        delete creep.memory.buildingStructureId;
         return false;
     }
 }

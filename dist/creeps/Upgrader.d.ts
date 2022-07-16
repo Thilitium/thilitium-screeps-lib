@@ -4,7 +4,7 @@
  * When controller is fully upgraded, it becomes a transporter.
  */
 export declare class Upgrader {
-    /** Upgrade / Gather / Harvest / Store */
+    /** Upgrade / Gather / Store */
     static run(creep: Creep): void;
 }
 declare global {

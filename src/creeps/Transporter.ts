@@ -5,7 +5,7 @@ export class Transporter {
     /** Store / Gather */
     static run(creep: Creep) {
         creep.memory.transporting = Behavior.Store.run(creep) ||
-            !(Behavior.Gather.run(creep) || Behavior.Repair.run(creep) || Behavior.Build.run(creep));;
+            !(Behavior.Gather.run(creep) || Behavior.Repair.run(creep) || Behavior.Build.run(creep));
     }
 }
 

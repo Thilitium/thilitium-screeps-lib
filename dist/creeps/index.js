@@ -19,4 +19,5 @@ __exportStar(require("./Miner"), exports);
 __exportStar(require("./Reparator"), exports);
 __exportStar(require("./Transporter"), exports);
 __exportStar(require("./Upgrader"), exports);
+__exportStar(require("./Options"), exports);
 //# sourceMappingURL=index.js.map

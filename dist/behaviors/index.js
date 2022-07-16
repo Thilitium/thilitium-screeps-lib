@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Structures = exports.Creeps = void 0;
+exports.Rooms = exports.Creeps = void 0;
 exports.Creeps = __importStar(require("./Creeps"));
-exports.Structures = __importStar(require("./Structures"));
+exports.Rooms = __importStar(require("./Rooms"));
 //# sourceMappingURL=index.js.map

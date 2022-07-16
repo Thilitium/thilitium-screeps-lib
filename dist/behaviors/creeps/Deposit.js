@@ -7,7 +7,7 @@ class Deposit {
      * Creeps will try to find a construction site to build and return true while they are currently building.
      * If the creep has no more energy available or the building has disappeared / is finished, returns false.
      */
-    static run(creep) {
+    static run(creep, onlyInRange = false) {
         if (creep.store[RESOURCE_ENERGY] === 0) {
             delete creep.memory.depositingStructureId;
             return false;
@@ -17,16 +17,18 @@ class Deposit {
         if (creep.memory.depositingStructureId)
             depositStructure = Game.getObjectById(creep.memory.depositingStructureId);
         if (!depositStructure || depositStructure.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            depositStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER
-                        || structure.structureType == STRUCTURE_STORAGE
-                        || structure.structureType == STRUCTURE_EXTENSION
-                        || structure.structureType == STRUCTURE_SPAWN
-                        || structure.structureType == STRUCTURE_TOWER)
-                        && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
+            let structureFilter = (structure) => (structure.structureType == STRUCTURE_CONTAINER
+                || structure.structureType == STRUCTURE_STORAGE
+                || structure.structureType == STRUCTURE_EXTENSION
+                || structure.structureType == STRUCTURE_SPAWN
+                || structure.structureType == STRUCTURE_TOWER)
+                && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            if (onlyInRange) {
+                depositStructure = creep.pos.findInRange(FIND_STRUCTURES, 1, { filter: structureFilter })[0] || null;
+            }
+            else {
+                depositStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, { filter: structureFilter });
+            }
         }
         if (depositStructure) {
             creep.memory.depositingStructureId = depositStructure.id;
@@ -34,7 +36,9 @@ class Deposit {
             switch (result) {
                 case ERR_NOT_IN_RANGE:
                     creep.moveTo(depositStructure, { visualizePathStyle: { stroke: '#ffffff' } });
+                    return true;
                 case 0:
+                    delete creep.memory.depositingStructureId;
                     return true;
                 default:
                     delete creep.memory.depositingStructureId;

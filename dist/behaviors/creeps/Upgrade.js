@@ -8,7 +8,7 @@ class Upgrade {
      * @returns False if couldnt upgrade (low on resource or no controller or wtv).
      */
     static run(creep) {
-        if (creep.store[RESOURCE_ENERGY] = 0)
+        if (creep.store[RESOURCE_ENERGY] === 0)
             return false;
         if (!creep.room.controller) {
             console.error(`Tried to upgrade a non-existent controller in room ${creep.room.name}.`);

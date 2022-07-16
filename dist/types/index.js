@@ -16,4 +16,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./CreepMemory"), exports);
 __exportStar(require("./Memory"), exports);
+__exportStar(require("./CreepOptions"), exports);
 //# sourceMappingURL=index.js.map

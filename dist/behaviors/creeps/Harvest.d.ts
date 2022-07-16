@@ -7,6 +7,6 @@ export declare class Harvest {
      * The creep will harvest energy from active sources.
      * @returns true if the creep is moving there or harvesting, false otherwise.
      */
-    static run(creep: Creep): boolean;
-    private static getFreeActiveSourceInRoom;
+    static run(creep: Creep, stationary: boolean): boolean;
+    private static getFreeSourceInRoom;
 }

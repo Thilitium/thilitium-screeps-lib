@@ -11,83 +11,73 @@ class Gather {
      */
     static run(creep) {
         if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            if (creep.memory.gatheringStructureId && Memory.tombstonesTakenCareOfIds.includes(creep.memory.gatheringStructureId)) {
+            /*if (creep.memory.gatheringStructureId && Memory.tombstonesTakenCareOfIds.includes(creep.memory.gatheringStructureId as Id<Tombstone>)) {
                 Memory.tombstonesTakenCareOfIds = Memory.tombstonesTakenCareOfIds.filter(t => t !== creep.memory.gatheringStructureId);
-                delete creep.memory.gatheringStructureId;
-            }
+            }*/
+            delete creep.memory.gatheringStructureId;
             return false;
         }
-        let resourceDeposit = null;
-        let tombId = null;
+        let resourceDeposit = creep.memory.gatheringStructureId ?
+            Game.getObjectById(creep.memory.gatheringStructureId)
+            : null;
+        //let tombId: Id<Tombstone> | null = null;
         // Get previous target if still holding enough material
         if (creep.memory.gatheringStructureId) {
-            resourceDeposit = Game.getObjectById(creep.memory.gatheringStructureId);
+            resourceDeposit = Game.getObjectById(creep.memory.gatheringStructureId) || null;
             if (resourceDeposit && resourceDeposit.store[RESOURCE_ENERGY] === 0) {
                 resourceDeposit = null;
             }
         }
         if (!resourceDeposit) {
-            const tombsLeft = Memory.tombstonesIds.filter(el => !Memory.tombstonesTakenCareOfIds.includes(el));
+            /*const tombsLeft = Memory.tombstonesIds.filter(el => !Memory.tombstonesTakenCareOfIds.includes(el));
+
             if (tombsLeft[0]) {
                 tombId = tombsLeft[0];
+
                 resourceDeposit = Game.getObjectById(tombId);
                 Memory.tombstonesTakenCareOfIds.push(tombId);
                 creep.memory.gatheringStructureId = tombId;
                 creep.say('🪦 Collect');
-            }
-            else {
-                resourceDeposit = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: structure => (structure.structureType === STRUCTURE_STORAGE
-                        || structure.structureType === STRUCTURE_CONTAINER)
-                        && structure.store[RESOURCE_ENERGY] >= creep.store.getCapacity()
-                });
-            }
+            } else {*/
+            // take the most full storage of the room at that time.
+            resourceDeposit = creep.room.find(FIND_STRUCTURES, {
+                filter: structure => (structure.structureType === STRUCTURE_STORAGE
+                    || structure.structureType === STRUCTURE_CONTAINER)
+                    && structure.store[RESOURCE_ENERGY] > structure.store.getCapacity(RESOURCE_ENERGY) * 0.5
+            }).sort((a, b) => a.store[RESOURCE_ENERGY] > b.store[RESOURCE_ENERGY] ? -1 : 1)[0];
+            //}
         }
-        if (!resourceDeposit) {
-            const resourceDeposit = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-            if (!resourceDeposit) {
-                delete creep.memory.gatheringStructureId;
-                return false;
-            }
-            const result = creep.harvest(resourceDeposit);
-            if (result == ERR_NOT_IN_RANGE)
-                creep.moveTo(resourceDeposit, { visualizePathStyle: { stroke: '#ffaa00' } });
-            else if (result === ERR_BUSY) {
-                creep.moveTo(resourceDeposit, { visualizePathStyle: { stroke: '#ffaa00' } });
-                return true;
-            }
-            else if (result !== 0)
-                console.log /*.error*/('creep cannot gather resources : ' + result);
-            else
-                return true;
-        }
-        else {
-            creep.memory.gatheringStructureId = resourceDeposit.id;
+        if (resourceDeposit) {
+            //creep.memory.gatheringStructureId = resourceDeposit.id;
             const result = creep.withdraw(resourceDeposit, RESOURCE_ENERGY);
-            if (!tombId && Memory.tombstonesIds.includes(resourceDeposit.id)) // in case the id was already stored
-                tombId = resourceDeposit.id;
             if (result == ERR_NOT_IN_RANGE) {
                 creep.moveTo(resourceDeposit, { visualizePathStyle: { stroke: '#ffaa00' } });
-                return true;
             }
             else if (result === ERR_BUSY) {
                 creep.moveTo(resourceDeposit, { visualizePathStyle: { stroke: '#ffaa00' } });
-                return true;
             }
             else if (result !== 0) {
-                console.log /*.error*/('creep cannot withdraw from source : ' + result);
-                return false;
+                console.error('creep cannot withdraw from source : ' + result);
+                resourceDeposit = null;
             }
-            if (tombId) {
-                //TODO: does not work.
-                if (resourceDeposit.store[RESOURCE_ENERGY] === 0)
-                    console.log /*info*/('♻️ A dead\'s creep tombstone has been plundered.');
-                delete creep.memory.gatheringStructureId;
-                Memory.tombstonesTakenCareOfIds = Memory.tombstonesTakenCareOfIds.filter(t => t !== tombId && t !== null);
+            else {
+                /*if (!tombId && Memory.tombstonesIds.includes(resourceDeposit.id as Id<Tombstone>)) // in case the id was already stored
+                    tombId = resourceDeposit.id as Id<Tombstone>;
+                if(tombId) {
+                    //TODO: does not work.
+                    if (resourceDeposit.store[RESOURCE_ENERGY] === 0)
+                        console.info('♻️ A dead\'s creep tombstone has been plundered.')
+                    Memory.tombstonesTakenCareOfIds = Memory.tombstonesTakenCareOfIds.filter(t => t !== tombId && t !== null);
+                    resourceDeposit = null;
+                }*/
             }
+        }
+        if (resourceDeposit) {
+            creep.memory.gatheringStructureId = resourceDeposit.id;
             return true;
         }
-        throw new Error('Should not be here.');
+        delete creep.memory.gatheringStructureId;
+        return false;
     }
 }
 exports.Gather = Gather;
