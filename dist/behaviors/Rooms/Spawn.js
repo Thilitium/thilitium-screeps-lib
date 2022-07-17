@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Spawn = void 0;
 class Spawn {
     static run(room, options) {
+        var _a;
         if (Memory.noMoreSpawns)
             return false;
-        const resourceCost = options.bodyParts.sum();
+        const resourceCost = options.bodyParts.reduce((a, b) => a += BODYPART_COST[b], 0);
         const resourceCapacity = room.energyCapacityAvailable;
         const availableResources = room.energyAvailable;
         if (resourceCost > resourceCapacity) {
@@ -13,7 +14,6 @@ class Spawn {
             return false;
         }
         if (resourceCost > availableResources) {
-            console.error(`🚱 Not enough energy available in the room to spawn the demanded creep () (${resourceCost}/${availableResources}).`);
             return false;
         }
         const newName = `${options.role}${Game.time}`;
@@ -30,9 +30,9 @@ class Spawn {
             transporting: false,
             upgrading: false,
             storingStructureId: undefined,
-            stationary: options.memoryAttributes['stationary']
+            stationary: ((_a = options.memoryAttributes) === null || _a === void 0 ? void 0 : _a.length) ? options.memoryAttributes['stationary'] : null
         };
-        const result = room.find(FIND_STRUCTURES)[0].spawnCreep(options.bodyParts, newName, {
+        const result = room.find(FIND_MY_SPAWNS)[0].spawnCreep(options.bodyParts, newName, {
             memory: memory
         });
         if (result === 0 || result === ERR_BUSY) {

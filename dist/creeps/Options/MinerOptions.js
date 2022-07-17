@@ -12,6 +12,7 @@ class MinerOptions {
         /** The basic bodyparts required for a miner to move, extract and work. */
         this.initialParts = [CARRY, MOVE, WORK];
         this.bodyParts = this.getBodyParts(maxCost);
+        this.role = 'miner';
         if (!this.bodyParts.length)
             throw new Error(`Cannot compute body parts for for miner, only giving ${maxCost} which is inferior to the minimum`);
         this.memoryAttributes = {

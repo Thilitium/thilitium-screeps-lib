@@ -37,8 +37,8 @@ export class RoomController {
         }
 
         const stationaryMiner = !!this.creepsInRoom(room, 'transporter').length;
-        return Behavior.Rooms
-        .Spawn.run(room, new Creeps.MinerOptions(room.energyAvailable, stationaryMiner));
+
+        return Behavior.Rooms.Spawn.run(room, new Creeps.MinerOptions(room.energyCapacityAvailable, stationaryMiner));
     }
 
     /**
@@ -57,7 +57,7 @@ export class RoomController {
         if (this.creepsInRoom(room, 'transporter').length >= transportersNeeded)
             return false;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyAvailable));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyCapacityAvailable));
     }
 
     /**
@@ -74,7 +74,7 @@ export class RoomController {
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
 
         if (constructionSites.length > buildersInRoom)
-            return Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyAvailable));
+            return Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyCapacityAvailable));
 
         return false;
     }
@@ -93,7 +93,7 @@ export class RoomController {
         if (this.creepsInRoom(room, 'reparator').length >= Math.ceil(structuresInRoom / 20))
             return false;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyAvailable));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyCapacityAvailable));
     }
 
     /**
@@ -112,7 +112,7 @@ export class RoomController {
         if (this.creepsInRoom(room, 'upgrader').length >= nbUpgradersNeeded)
             return false;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyAvailable));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyCapacityAvailable));
     }
 
     /**

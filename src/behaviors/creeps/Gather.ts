@@ -7,7 +7,7 @@ export class Gather {
      * @returns If the action has succeeded or not.
      */
     static run(creep: Creep): boolean {
-        if(creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
             /*if (creep.memory.gatheringStructureId && Memory.tombstonesTakenCareOfIds.includes(creep.memory.gatheringStructureId as Id<Tombstone>)) {
                 Memory.tombstonesTakenCareOfIds = Memory.tombstonesTakenCareOfIds.filter(t => t !== creep.memory.gatheringStructureId);
             }*/
@@ -15,12 +15,12 @@ export class Gather {
             delete creep.memory.gatheringStructureId;
             return false;
         }
-        let resourceDeposit: /*Tombstone | */StructureContainer | StructureStorage | null = 
+        let resourceDeposit: /*Tombstone | */StructureContainer | StructureStorage | null =
             creep.memory.gatheringStructureId ?
                 Game.getObjectById</*Tombstone | */StructureContainer | StructureStorage>(creep.memory.gatheringStructureId)
                 : null;
         //let tombId: Id<Tombstone> | null = null;
-        
+
         // Get previous target if still holding enough material
         if (creep.memory.gatheringStructureId) {
 
@@ -28,12 +28,12 @@ export class Gather {
                 creep.memory.gatheringStructureId
             ) || null;
 
-            if (resourceDeposit && resourceDeposit.store[RESOURCE_ENERGY] === 0){
+            if (resourceDeposit && resourceDeposit.store[RESOURCE_ENERGY] === 0) {
                 resourceDeposit = null;
             }
         }
 
-        if(!resourceDeposit) {
+        if (!resourceDeposit) {
             /*const tombsLeft = Memory.tombstonesIds.filter(el => !Memory.tombstonesTakenCareOfIds.includes(el));
 
             if (tombsLeft[0]) {
@@ -45,13 +45,13 @@ export class Gather {
                 creep.say('🪦 Collect');
             } else {*/
             // take the most full storage of the room at that time.
-                resourceDeposit = creep.room.find<StructureStorage | StructureContainer>(
-                    FIND_STRUCTURES, {
-                    filter: structure => 
-                        (structure.structureType === STRUCTURE_STORAGE
+            resourceDeposit = creep.room.find<StructureStorage | StructureContainer>(
+                FIND_STRUCTURES, {
+                filter: structure =>
+                    (structure.structureType === STRUCTURE_STORAGE
                         || structure.structureType === STRUCTURE_CONTAINER)
-                        && structure.store[RESOURCE_ENERGY] > structure.store.getCapacity(RESOURCE_ENERGY) * 0.5
-                }).sort((a, b) => a.store[RESOURCE_ENERGY] > b.store[RESOURCE_ENERGY] ? -1 : 1)[0];
+                    && structure.store[RESOURCE_ENERGY] > structure.store.getCapacity(RESOURCE_ENERGY) * 0.5
+            }).sort((a, b) => a.store[RESOURCE_ENERGY] > b.store[RESOURCE_ENERGY] ? -1 : 1)[0];
             //}
         }
 
@@ -64,7 +64,7 @@ export class Gather {
                 creep.moveTo(resourceDeposit, { visualizePathStyle: { stroke: '#ffaa00' } });
             } else if (result === ERR_BUSY) {
                 creep.moveTo(resourceDeposit, { visualizePathStyle: { stroke: '#ffaa00' } });
-            } else if(result !== 0) {
+            } else if (result !== 0) {
                 console.error('creep cannot withdraw from source : ' + result);
                 resourceDeposit = null;
             } else {

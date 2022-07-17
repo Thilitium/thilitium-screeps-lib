@@ -17,6 +17,7 @@ export class MinerOptions implements CreepOptions {
      */
     constructor(maxCost: number, stationary: boolean) {
         this.bodyParts = this.getBodyParts(maxCost);
+        this.role = 'miner';
         if (!this.bodyParts.length)
             throw new Error(`Cannot compute body parts for for miner, only giving ${maxCost} which is inferior to the minimum`);
 

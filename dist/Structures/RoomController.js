@@ -53,8 +53,7 @@ class RoomController {
             return false;
         }
         const stationaryMiner = !!this.creepsInRoom(room, 'transporter').length;
-        return Behavior.Rooms
-            .Spawn.run(room, new Creeps.MinerOptions(room.energyAvailable, stationaryMiner));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.MinerOptions(room.energyCapacityAvailable, stationaryMiner));
     }
     /**
      * Tries to spawn 1 transporter for 2 storages units.
@@ -70,7 +69,7 @@ class RoomController {
         const transportersNeeded = Math.ceil(storageStructures.length / 2);
         if (this.creepsInRoom(room, 'transporter').length >= transportersNeeded)
             return false;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyAvailable));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyCapacityAvailable));
     }
     /**
      * Tries to spawn one creep per construction site currently in the room, capped at 4.
@@ -85,7 +84,7 @@ class RoomController {
             return false;
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
         if (constructionSites.length > buildersInRoom)
-            return Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyAvailable));
+            return Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyCapacityAvailable));
         return false;
     }
     /**
@@ -101,7 +100,7 @@ class RoomController {
             return false;
         if (this.creepsInRoom(room, 'reparator').length >= Math.ceil(structuresInRoom / 20))
             return false;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyAvailable));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyCapacityAvailable));
     }
     /**
      * Tries to spawn half as much upgraders as there are other types of creeps in the room.
@@ -117,7 +116,7 @@ class RoomController {
         const nbUpgradersNeeded = Math.ceil(nbCreepsOtherThanUpgrader / 2);
         if (this.creepsInRoom(room, 'upgrader').length >= nbUpgradersNeeded)
             return false;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyAvailable));
+        return Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyCapacityAvailable));
     }
     /**
      * Get the creeps in the room that matches the specified role.

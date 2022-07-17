@@ -4,7 +4,7 @@ export class Deposit {
      * Creeps will try to find a construction site to build and return true while they are currently building.
      * If the creep has no more energy available or the building has disappeared / is finished, returns false.
      */
-    static run(creep: Creep, onlyInRange: boolean = false) {
+    static run(creep: Creep, onlyInRange = false) {
         if (creep.store[RESOURCE_ENERGY] === 0) {
             delete creep.memory.depositingStructureId;
             return false;
@@ -18,16 +18,16 @@ export class Deposit {
                 (creep.memory.depositingStructureId);
 
         if (!depositStructure || depositStructure.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            let structureFilter = (structure: StructureContainer | StructureStorage | StructureExtension | StructureSpawn | StructureTower) =>
+            const structureFilter = (structure: StructureContainer | StructureStorage | StructureExtension | StructureSpawn | StructureTower) =>
                 (structure.structureType == STRUCTURE_CONTAINER
                     || structure.structureType == STRUCTURE_STORAGE
                     || structure.structureType == STRUCTURE_EXTENSION
                     || structure.structureType == STRUCTURE_SPAWN
                     || structure.structureType == STRUCTURE_TOWER)
-                    && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
 
             if (onlyInRange) {
-                depositStructure = creep.pos.findInRange<StructureContainer | StructureStorage | StructureExtension | StructureSpawn | StructureTower> 
+                depositStructure = creep.pos.findInRange<StructureContainer | StructureStorage | StructureExtension | StructureSpawn | StructureTower>
                     (FIND_STRUCTURES, 1, { filter: structureFilter })[0] || null;
             } else {
                 depositStructure = creep.pos.findClosestByPath(

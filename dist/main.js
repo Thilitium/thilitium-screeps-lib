@@ -23,7 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Structures = exports.Types = exports.Creeps = exports.Behaviors = void 0;
+exports.Structures = exports.Types = exports.Creeps = exports.Behaviors = exports.Extensions = void 0;
+exports.Extensions = __importStar(require("./Extensions"));
 exports.Behaviors = __importStar(require("./Behaviors"));
 exports.Creeps = __importStar(require("./Creeps"));
 exports.Types = __importStar(require("./Types/"));

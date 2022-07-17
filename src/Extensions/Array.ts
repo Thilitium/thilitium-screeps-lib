@@ -7,12 +7,10 @@ declare global {
     }
 }
 
-Object.defineProperty(Array.prototype, 'sum', {
-    value: function (this: Array<number | BodyPartConstant>): number {
-        const numbers: number[] = this instanceof Array<number> ?
-            this as number[] :
-            (this as Array<BodyPartConstant>).map((part: BodyPartConstant) => BODYPART_COST[part]);
+Array.prototype.sum = function (this: Array<number | BodyPartConstant>): number {
+    const numbers: number[] = this instanceof Array<number> ?
+        this as number[] :
+        (this as Array<BodyPartConstant>).map((part: BodyPartConstant) => BODYPART_COST[part]);
 
-        return numbers.reduce((acc, now) => acc + now, 0);
-    }
-});
+    return numbers.reduce((acc, now) => acc + now, 0);
+};

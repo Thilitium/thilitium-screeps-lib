@@ -1,11 +1,8 @@
-import * as _ from 'lodash';
-
 export class Spawn {
     static run(room: Room, options: CreepOptions): boolean {
         if (Memory.noMoreSpawns) return false;
 
-
-        const resourceCost = options.bodyParts.sum();
+        const resourceCost = options.bodyParts.reduce((a, b) => a += BODYPART_COST[b], 0);
         const resourceCapacity = room.energyCapacityAvailable;
         const availableResources = room.energyAvailable;
 
@@ -15,7 +12,6 @@ export class Spawn {
         }
 
         if (resourceCost > availableResources) {
-            console.error(`🚱 Not enough energy available in the room to spawn the demanded creep () (${resourceCost}/${availableResources}).`);
             return false;
         }
 
@@ -33,10 +29,10 @@ export class Spawn {
             transporting: false,
             upgrading: false,
             storingStructureId: undefined,
-            stationary: options.memoryAttributes['stationary']
+            stationary: options.memoryAttributes?.length ? options.memoryAttributes['stationary'] : null
         };
 
-        const result = room.find<StructureSpawn>(FIND_STRUCTURES)[0].spawnCreep(
+        const result = room.find(FIND_MY_SPAWNS)[0].spawnCreep(
             options.bodyParts,
             newName,
             {
