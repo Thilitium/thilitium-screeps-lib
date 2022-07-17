@@ -44,7 +44,7 @@ class RoomController {
     static spawnMiners(room) {
         if (Memory.noMoreSpawns)
             return false;
-        const miningSpotsInRoom = room.find(FIND_SOURCES).map(source => source.room.lookForAtArea(LOOK_TERRAIN, source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true).length).reduce((a, b) => a += b, 0);
+        const miningSpotsInRoom = room.find(FIND_SOURCES).map(source => source.room.lookForAtArea(LOOK_TERRAIN, source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true).filter(terrain => terrain.terrain !== 'wall').length).reduce((a, b) => a += b, 0);
         if (!miningSpotsInRoom) {
             console.error(`There is no energy mining spots in room ${room.name}.`);
             return false;
@@ -85,6 +85,7 @@ class RoomController {
         if (buildersInRoom >= 4)
             return false;
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
+        console.log(buildersInRoom + ' ' + constructionSites.length);
         if (constructionSites.length <= buildersInRoom) {
             return false;
         }

@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Upgrader = void 0;
-const Behavior = __importStar(require("../Behaviors/Creeps"));
+const Behaviors = __importStar(require("../Behaviors/Creeps"));
 /**
  * Creep meant to upgrade the main controller of its own room by any means.
  * When controller is fully upgraded, it becomes a transporter.
@@ -32,8 +32,10 @@ const Behavior = __importStar(require("../Behaviors/Creeps"));
 class Upgrader {
     /** Upgrade / Gather / Store */
     static run(creep) {
-        creep.memory.upgrading = Behavior.Upgrade.run(creep) ||
-            !(Behavior.Gather.run(creep) || Behavior.Store.run(creep));
+        if (creep.memory.upgrading || (!creep.memory.upgrading && creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0))
+            creep.memory.upgrading = Behaviors.Upgrade.run(creep);
+        if (!creep.memory.upgrading)
+            creep.memory.upgrading = !(Behaviors.Gather.run(creep) || /*Behaviors.Store.run(creep) ||*/ Behaviors.Harvest.run(creep, false));
     }
 }
 exports.Upgrader = Upgrader;

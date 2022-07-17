@@ -8,7 +8,7 @@ class UpgraderOptions {
      */
     constructor(maxCost) {
         this.bodyParts = this.getBodyParts(maxCost);
-        this.role = 'builder';
+        this.role = 'upgrader';
         if (!this.bodyParts.length)
             throw new Error(`Cannot compute body parts for for upgrader, only giving ${maxCost} which is inferior to the minimum`);
     }

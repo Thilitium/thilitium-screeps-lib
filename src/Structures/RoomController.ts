@@ -24,7 +24,7 @@ export class RoomController {
             source.room.lookForAtArea(
                 LOOK_TERRAIN,
                 source.pos.y - 1, source.pos.x - 1,
-                source.pos.y + 1, source.pos.x + 1, true).length
+                source.pos.y + 1, source.pos.x + 1, true).filter(terrain => terrain.terrain !== 'wall').length
         ).reduce((a, b) => a += b, 0);
 
         if (!miningSpotsInRoom) {
@@ -74,7 +74,6 @@ export class RoomController {
         if (buildersInRoom >= 4) return false;
 
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
-
         if (constructionSites.length <= buildersInRoom) {
             return false;
         }
