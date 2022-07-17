@@ -44,7 +44,7 @@ class RoomController {
     static spawnMiners(room) {
         if (Memory.noMoreSpawns)
             return false;
-        const miningSpotsInRoom = room.find(FIND_SOURCES).filter(source => source.room.lookForAtArea(LOOK_TERRAIN, source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true).length).length;
+        const miningSpotsInRoom = room.find(FIND_SOURCES).map(source => source.room.lookForAtArea(LOOK_TERRAIN, source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true).length).reduce((a, b) => a += b, 0);
         if (!miningSpotsInRoom) {
             console.error(`There is no energy mining spots in room ${room.name}.`);
             return false;
@@ -53,7 +53,8 @@ class RoomController {
             return false;
         }
         const stationaryMiner = !!this.creepsInRoom(room, 'transporter').length;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.MinerOptions(room.energyCapacityAvailable, stationaryMiner));
+        Behavior.Rooms.Spawn.run(room, new Creeps.MinerOptions(room.energyCapacityAvailable, stationaryMiner));
+        return true;
     }
     /**
      * Tries to spawn 1 transporter for 2 storages units.
@@ -63,13 +64,14 @@ class RoomController {
     static spawnTransporters(room) {
         if (Memory.noMoreSpawns)
             return false;
-        const storageStructures = room.find(FIND_STRUCTURES);
+        const storageStructures = room.find(FIND_STRUCTURES, { filter: structure => structure.structureType === STRUCTURE_STORAGE || structure.structureType === STRUCTURE_CONTAINER });
         if (!storageStructures.length)
             return false;
         const transportersNeeded = Math.ceil(storageStructures.length / 2);
         if (this.creepsInRoom(room, 'transporter').length >= transportersNeeded)
             return false;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyCapacityAvailable));
+        Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyCapacityAvailable));
+        return true;
     }
     /**
      * Tries to spawn one creep per construction site currently in the room, capped at 4.
@@ -83,9 +85,11 @@ class RoomController {
         if (buildersInRoom >= 4)
             return false;
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
-        if (constructionSites.length > buildersInRoom)
-            return Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyCapacityAvailable));
-        return false;
+        if (constructionSites.length <= buildersInRoom) {
+            return false;
+        }
+        Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyCapacityAvailable));
+        return true;
     }
     /**
      * Tries to spawn a reparator for each 20 structures in the room.
@@ -96,11 +100,12 @@ class RoomController {
         if (Memory.noMoreSpawns)
             return false;
         const structuresInRoom = room.find(FIND_STRUCTURES).length;
-        if (!structuresInRoom)
+        if (structuresInRoom < 4)
             return false;
         if (this.creepsInRoom(room, 'reparator').length >= Math.ceil(structuresInRoom / 20))
             return false;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyCapacityAvailable));
+        Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyCapacityAvailable));
+        return true;
     }
     /**
      * Tries to spawn half as much upgraders as there are other types of creeps in the room.
@@ -116,7 +121,8 @@ class RoomController {
         const nbUpgradersNeeded = Math.ceil(nbCreepsOtherThanUpgrader / 2);
         if (this.creepsInRoom(room, 'upgrader').length >= nbUpgradersNeeded)
             return false;
-        return Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyCapacityAvailable));
+        Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyCapacityAvailable));
+        return true;
     }
     /**
      * Get the creeps in the room that matches the specified role.

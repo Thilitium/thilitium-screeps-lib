@@ -20,12 +20,12 @@ export class RoomController {
     private static spawnMiners(room: Room): boolean {
         if (Memory.noMoreSpawns) return false;
 
-        const miningSpotsInRoom = room.find(FIND_SOURCES).filter(source =>
+        const miningSpotsInRoom = room.find(FIND_SOURCES).map(source =>
             source.room.lookForAtArea(
                 LOOK_TERRAIN,
                 source.pos.y - 1, source.pos.x - 1,
                 source.pos.y + 1, source.pos.x + 1, true).length
-        ).length;
+        ).reduce((a, b) => a += b, 0);
 
         if (!miningSpotsInRoom) {
             console.error(`There is no energy mining spots in room ${room.name}.`);
@@ -38,7 +38,8 @@ export class RoomController {
 
         const stationaryMiner = !!this.creepsInRoom(room, 'transporter').length;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.MinerOptions(room.energyCapacityAvailable, stationaryMiner));
+        Behavior.Rooms.Spawn.run(room, new Creeps.MinerOptions(room.energyCapacityAvailable, stationaryMiner));
+        return true;
     }
 
     /**
@@ -49,7 +50,7 @@ export class RoomController {
     private static spawnTransporters(room: Room): boolean {
         if (Memory.noMoreSpawns) return false;
 
-        const storageStructures = room.find<StructureStorage | StructureContainer>(FIND_STRUCTURES);
+        const storageStructures = room.find<StructureStorage | StructureContainer>(FIND_STRUCTURES, { filter: structure => structure.structureType === STRUCTURE_STORAGE || structure.structureType === STRUCTURE_CONTAINER });
         if (!storageStructures.length)
             return false;
 
@@ -57,7 +58,8 @@ export class RoomController {
         if (this.creepsInRoom(room, 'transporter').length >= transportersNeeded)
             return false;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyCapacityAvailable));
+        Behavior.Rooms.Spawn.run(room, new Creeps.TransporterOptions(room.energyCapacityAvailable));
+        return true;
     }
 
     /**
@@ -73,10 +75,12 @@ export class RoomController {
 
         const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
 
-        if (constructionSites.length > buildersInRoom)
-            return Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyCapacityAvailable));
+        if (constructionSites.length <= buildersInRoom) {
+            return false;
+        }
 
-        return false;
+        Behavior.Rooms.Spawn.run(room, new Creeps.BuilderOptions(room.energyCapacityAvailable));
+        return true;
     }
 
     /**
@@ -88,12 +92,13 @@ export class RoomController {
         if (Memory.noMoreSpawns) return false;
 
         const structuresInRoom = room.find(FIND_STRUCTURES).length;
-        if (!structuresInRoom) return false;
+        if (structuresInRoom < 4) return false;
 
         if (this.creepsInRoom(room, 'reparator').length >= Math.ceil(structuresInRoom / 20))
             return false;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyCapacityAvailable));
+        Behavior.Rooms.Spawn.run(room, new Creeps.ReparatorOptions(room.energyCapacityAvailable));
+        return true;
     }
 
     /**
@@ -112,7 +117,8 @@ export class RoomController {
         if (this.creepsInRoom(room, 'upgrader').length >= nbUpgradersNeeded)
             return false;
 
-        return Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyCapacityAvailable));
+        Behavior.Rooms.Spawn.run(room, new Creeps.UpgraderOptions(room.energyCapacityAvailable));
+        return true;
     }
 
     /**
